@@ -68,8 +68,6 @@ Here's a [link to my video result](https://youtu.be/PR4WwWF4D88)
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-
 -- I could implement a class for the box to take last few frames for smoothing.
 
 -- Cars are not detected when it first appears, because of scaling/window size. If I use smaller window size, then perhaps it can detect the car in its early entry.
