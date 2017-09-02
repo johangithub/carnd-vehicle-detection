@@ -54,22 +54,14 @@ I trained a linear SVM using `LinearSVC` from `scikit-learn` package with spatia
 
 ### Sliding Window Search and Heatmap
 
-#### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
-
-Window search was done simply at the bottom half of the image using `scale=1.5`
-
-#### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
-
-The images below show the pipeline to detect multiple detection and false positives. First I show that different boxes scan the image and identify vehicles. Then I use `label` function from `scikit-learn` and set `threshold=1` to avoid false positive. Notice the left box (false positive) from the first image in the 3rd row. Thresholding successfully removes that image. However, in the same image, we discard the correctly-identified white vehicle on the right.
+Window search was done at the bottom half of the image using `scale=1.5` The images below show the pipeline to detect multiple detection and false positives. First I show that different boxes scan the image and identify vehicles. Then I use `label` function from `scikit-learn` and set `threshold=1` to avoid false positive. Notice the left box (false positive) from the first image in the 3rd row. Thresholding successfully removes that image. However, in the same image, we discard the correctly-identified white vehicle on the right.
 
 ![alt text](./combined.png)
 ---
 
 ### Video Implementation
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video. 
 Here's a [link to my video result](https://youtu.be/PR4WwWF4D88)
-
 
 
 ---
@@ -78,5 +70,8 @@ Here's a [link to my video result](https://youtu.be/PR4WwWF4D88)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+-- I could implement a class for the box to take last few frames for smoothing.
 
+-- Cars are not detected when it first appears, because of scaling/window size. If I use smaller window size, then perhaps it can detect the car in its early entry.
+
+-- There is a flash of one second where shadow distorts the detection. These frames caused problems in the previous project as well. Make my color space more robust to that.
