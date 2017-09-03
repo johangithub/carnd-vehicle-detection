@@ -10,7 +10,9 @@ from skimage.feature import hog
 from sklearn.model_selection import train_test_split
 from moviepy.editor import VideoFileClip
 from scipy.ndimage.measurements import label
+from collections import deque
 
+heatmaps = deque(maxlen=14)
 # Read in car and non-car images
 vehicle_images = glob.glob('vehicles/*.*.jpeg')
 non_vehicle_images = glob.glob('nonvehicles/*/*.jpeg')
@@ -321,14 +323,14 @@ print(round(t2 - t, 5), 'Seconds to predict', n_predict, 'labels with SVC')
 
 
 # Define a single function that can extract features using hog sub-sampling and make predictions
-def find_cars(img, ystart, ystop, scale, svc, X_scaler,
+def find_cars(img, ystart, ystop, xstart, scale, svc, X_scaler,
               orient, pix_per_cell, cell_per_block, spatial_size, hist_bins,
               color_space, hog_channel, spatial_feat, hist_feat, hog_feat):
     draw_img = np.copy(img)
     draw_img2 = np.copy(img)
     img = img.astype(np.float32) / 255
 
-    img_tosearch = img[ystart:ystop, :, :]
+    img_tosearch = img[ystart:ystop, xstart:, :]
     ctrans_tosearch = convert_color(img_tosearch, conv='RGB2YCrCb')
     if scale != 1:
         imshape = ctrans_tosearch.shape
@@ -419,27 +421,26 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler,
 
     heat = np.zeros_like(img[:, :, 0]).astype(np.float32)
     heat = add_heat(heat, box_list)
-    heat = apply_threshold(heat, 1)
-    heatmap = np.clip(heat, 0, 255)
-    labels = label(heatmap)
+    heatmaps.append(heat)
+    heatmap_sum = sum(heatmaps)
+    heat_out = apply_threshold(heatmap_sum, 7)
+    labels = label(heat_out)
     draw_img2 = draw_labeled_bboxes(draw_img2, labels)
     return draw_img2
 
 
 ystart = 400
 ystop = 720
+xstart = 500
 scale = 1.5
-image = mpimg.imread('test_images/test1.jpg')
-out_img = find_cars(image, ystart, ystop, scale, svc, X_scaler, **kwargs)
 
 
 def process_image(image):
-    out_img = find_cars(image, ystart, ystop, scale, svc, X_scaler, **kwargs)
+    out_img = find_cars(image, ystart, ystop, xstart, scale, svc, X_scaler, **kwargs)
     return out_img
 
-"""
+
 video_filename = 'project'
 clip1 = VideoFileClip(video_filename + '_video.mp4')
 clip_out = clip1.fl_image(process_image)
 clip_out.write_videofile(video_filename + '_video_out.mp4', audio=False)
-"""
