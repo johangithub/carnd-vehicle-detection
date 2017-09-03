@@ -10,7 +10,7 @@ The goals / steps of this project are the following:
 * Estimate a bounding box for vehicles detected.
 
 [//]: # (Image References)
-[image1]: ./examples/car_not_car.png
+[image1]: ./examples/car_not_car.png 
 [image2]: ./examples/HOG_example.jpg
 [image3]: ./examples/sliding_windows.jpg
 [image4]: ./examples/sliding_window.jpg
@@ -49,27 +49,23 @@ The default parameters worked well enough, with the exception of YCrCb color spa
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using `LinearSVC` from `scikit-learn` package with spatial, hist, and hof features.
+I trained a linear SVM using `LinearSVC` from `scikit-learn` package with spatial, hist, and hog features.
 
 
 ### Sliding Window Search and Heatmap
 
-Window search was done at the bottom half of the image using `scale=1.5` The images below show the pipeline to detect multiple detection and false positives. First I show that different boxes scan the image and identify vehicles. Then I use `label` function from `scikit-learn` and set `threshold=1` to avoid false positive. Notice the left box (false positive) from the first image in the 3rd row. Thresholding successfully removes that image. However, in the same image, we discard the correctly-identified white vehicle on the right.
+Window search was done at the bottom half of the image using `scale=1.5` The images below show the pipeline to detect multiple detection and false positives. First I show that different boxes scan the image and identify vehicles. Then I use `label` function from `scikit-learn` and set `threshold=7` to avoid false positive. Notice the left box (false positive) from the first image in the 3rd row. Thresholding successfully removes that image. However, in the same image, we discard the correctly-identified white vehicle on the right.
 
 ![alt text](./combined.png)
 ---
 
 ### Video Implementation
 
-Here's a [link to my video result](https://youtu.be/PR4WwWF4D88)
+Here's a [link to my video result](https://youtu.be/PR4WwWF4D88). In video implementation, I use `deque(maxlen=14)` with `threshold=7` to avoid false positive.
 
 
 ---
 
 ### Discussion
 
--- I could implement a class for the box to take last few frames for smoothing.
-
 -- Cars are not detected when it first appears, because of scaling/window size. If I use smaller window size, then perhaps it can detect the car in its early entry.
-
--- There is a flash of one second where shadow distorts the detection. These frames caused problems in the previous project as well. Make my color space more robust to that.
