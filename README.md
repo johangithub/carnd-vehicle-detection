@@ -61,7 +61,7 @@ Window search was done at the bottom half of the image using `scale=1.5` The ima
 
 ### Video Implementation
 
-Here's a [link to my video result](https://youtu.be/8sQuK_KNrKY). In video implementation, I use `deque(maxlen=14)` with `threshold=7` to avoid false positive.
+Here's a [link to my video result](https://youtu.be/8sQuK_KNrKY). In video implementation, I use `deque(maxlen=14)` with `threshold=7` to avoid false positive. `xstart=500` was also implemented, but I suspect that this value may be too constraining and that it only worked because the vehicle was in the first lane in the project video.
 
 
 ---
